@@ -1,0 +1,5 @@
+.snakemake
+work/
+test.yaml
+*html
+multiqc_data
