@@ -25,7 +25,7 @@ def is_pe(name):
 # DETERMINE REMOTE OR LOCAL RESOURCE
 def determine_resource(path):
     if "gs://" in path:
-         return GSRemoteProvider().remote(path.replace("gs://",""))
+         return GSRemoteProvider().remote(path.replace("gs://",""), user_project=BILLING)
     elif "ftp://" in path:
          return FTPRemoteProvider().remote(path)
     elif "s3://" in path:
@@ -37,13 +37,15 @@ def determine_resource(path):
     else:
         return path
 
-PROJECT_NAME = config.get("project","rna")
 MY_SAMPLES = config.get("samples",None)
+BILLING = config.get("billing_project",None)
 
 target_files=[]
 
 # we pretty much always want these
-target_files.append("index/chrLength.txt",)
+#target_files.append("")
+target_files += expand("star/{s}/", s=MY_SAMPLES)
+
 
 ruleorder: trim_se > trim_pe
 

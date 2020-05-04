@@ -4,8 +4,6 @@
 
 MAX_THREADS: 8
 
-
-project: template # your project name here
 fasta: /media/mlawlor/work/dmel-all-chromosome-r6.22.fasta
 gtf: /media/mlawlor/work/dmel-all-r6.22.gtf
 samples:

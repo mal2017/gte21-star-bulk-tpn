@@ -125,3 +125,29 @@ rule generate_star_idx:
         "--genomeFastaFiles {input.genome} "
         "--sjdbGTFfile {input.gtf} "
         "--genomeSAindexNbases 11"
+
+rule star_align:
+    input:
+        rules.generate_star_idx.output,
+        reads = lambda wc: get_fqs_for_aln(wc.s),
+        gtf = determine_resource(config.get('gtf', None)),
+    output:
+        directory("star/{s}/")
+    threads:
+        config.get("MAX_THREADS", 1)
+    conda:
+        "envs/star.yaml"
+    #shadow:
+    #    "minimal"
+    #singularity:
+    #    "docker://quay.io/biocontainers/star:2.7.3a--0"
+    shell:
+        "STAR "
+        "--genomeDir index/ --runThreadN {threads} "
+        "--readFilesIn {input.reads} "
+        "--outSAMmultNmax 1 "
+        "--outSAMtype BAM Unsorted "
+        "--quantMode GeneCounts "
+        "--sjdbGTFfile {input.gtf} "
+        "--readFilesCommand zcat "
+        "--outFileNamePrefix {output}"
