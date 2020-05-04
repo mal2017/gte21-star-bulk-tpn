@@ -4,8 +4,8 @@
 
 MAX_THREADS: 8
 
-fasta: /media/mlawlor/work/dmel-all-chromosome-r6.22.fasta
-gtf: /media/mlawlor/work/dmel-all-r6.22.gtf
+fasta: /scratch/mal456/20200105_elr/genome/fasta/genome.fa
+gtf: /scratch/mal456/20200105_elr/genome/genes/genes.gtf
 
 samples:
   larval_testes_cleaned_papain_01: # your own assigned name for this sample
@@ -25,19 +25,19 @@ samples:
     fastq:
       r1:
         - gs://sra-pub-src-7/SRR7276833/B8_TCP_R1.fastq.gz
-  larval_testes_papain_05:
-    fastq:
-      r1:
-        - gs://sra-pub-src-7/SRR11101390/A5_TCP_1_S9_L001_R1_001.fastq.gz.1
-  larval_testes_papain_06:
-    fastq:
-      r1:
-        - gs://sra-pub-src-7/SRR11101391/A6_TCP_2_S13_L002_R1_001.fastq.gz.1
-  larval_testes_papain_07:
-    fastq:
-      r1:
-        - gs://sra-pub-src-7/SRR11101392/A7_TCP_3_S12_L001_R1_001.fastq.gz.1
-  larval_testes_papain_08:
-    fastq:
-      r1:
-        - gs://sra-pub-src-7/SRR11101393/A8_TCP_4_S17_L002_R1_001.fastq.gz.1
+  # larval_testes_papain_05:
+  #   fastq:
+  #     r1:
+  #       - gs://sra-pub-src-7/SRR11101390/A5_TCP_1_S9_L001_R1_001.fastq.gz.1
+  # larval_testes_papain_06:
+  #   fastq:
+  #     r1:
+  #       - gs://sra-pub-src-7/SRR11101391/A6_TCP_2_S13_L002_R1_001.fastq.gz.1
+  # larval_testes_papain_07:
+  #   fastq:
+  #     r1:
+  #       - gs://sra-pub-src-7/SRR11101392/A7_TCP_3_S12_L001_R1_001.fastq.gz.1
+  # larval_testes_papain_08:
+  #   fastq:
+  #     r1:
+  #       - gs://sra-pub-src-7/SRR11101393/A8_TCP_4_S17_L002_R1_001.fastq.gz.1

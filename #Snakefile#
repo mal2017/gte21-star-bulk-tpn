@@ -17,7 +17,7 @@ __author__ = "Matt Lawlor"
 
 # SETUP
 shell.executable("/bin/bash")
-BILLING = config.get("billing_project",None)
+conda activate snk
 
 def is_pe(name):
     fqs = MY_SAMPLES.get(name,None).get("fastq",None)
