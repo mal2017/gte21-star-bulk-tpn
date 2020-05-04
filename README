@@ -1,9 +1,0 @@
-# star-bulk-tpn
-
-assess detection of transposable elements from bulk rnaseq
-
-# getting started
-
-```
-snakemake --configfile config.yaml --use-conda --cores 8 -d work --keep-remote --config billing_project=YOUR_GCP_PROJECT -kp
-```
