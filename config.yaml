@@ -1,33 +1,15 @@
-# The config is in yaml format and consists of two top level sections:
-# `analysis` and `samples`.
-# Briefly, the analysis section contains info that pertains to all samples or
-# metadata for the pipeline run.
-# The samples section contains sample-specific info.
+# https://www.biorxiv.org/content/10.1101/2020.03.23.000356v1.full
+# https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE115478
+
+
+MAX_THREADS: 8
+
 
 project: template # your project name here
-control_level: treatmentA # control condition
-genome:
-  fasta: ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_30/GRCh38.primary_assembly.genome.fa.gz
-  gtf: ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_30/gencode.v30.annotation.gtf.gz
-txome:
-  gencode: True
-  fasta: ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_30/gencode.v30.pc_transcripts.fa.gz
-salmon_config:
-  bootstraps: 10
+fasta: /media/mlawlor/work/dmel-all-chromosome-r6.22.fasta
+gtf: /media/mlawlor/work/dmel-all-r6.22.gtf
 samples:
   samp1: # your own assigned name for this sample
-    condition: # list of covariates. Order of covariate must remain conserved across all samples, and the last one should be the condition of interest
-      - batch1
-      - treatmentA
-    fastq: # uri to fastq or fastq.gz.
+    fastq: # uri to fastq or fastq.gz. can be single or paired end
       r1:
-        - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR442/001/SRR4422361/SRR4422361.fastq.gz
-  samp2: # your own assigned name for this sample
-    condition: # list of covariates. Order of covariate must remain conserved across all samples, and the last one should be the condition of interest
-      - batch1
-      - treatmentA
-    fastq: # uri to fastq or fastq.gz.
-      r1:
-        - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR442/001/SRR4422361/SRR4422361.fastq.gz
-      r2:
-        - ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR442/001/SRR4422361/SRR4422361.fastq.gz # dummy r2
+        - gs://sra-pub-src-7/SRR7276830/B5_TCP_R1.fastq.gz

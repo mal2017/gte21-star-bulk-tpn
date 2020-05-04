@@ -78,95 +78,50 @@ rule trim_pe:
         "-j {output.json} -h {output.html} "
         "-w {threads} -L -R {wildcards.s}_fastp"
 
-
-rule get_txome_fasta:
-    output:
-        "ref/fa/txfa"
-    params:
-        fl=config["txome"].get("fasta",None)
-    shell:
-        "curl -J -L {params.fl} > {output[0]}"
-
 rule get_gtf:
     output:
         "ref/tx.gtf"
     params:
-        fl=config["genome"].get("gtf",None)
+        fl=config.get("gtf",None)
     shell:
         "curl -J -L {params.fl} > {output[0]}"
 
-rule salmon_index:
+rule generate_star_idx:
+    """
+    https://kb.10xgenomics.com/hc/en-us/articles/115004415786-What-parameters-are-used-for-STAR-alignment-
+    https://github.com/10XGenomics/cellranger/blob/master/mro/stages/counter/align_reads/__init__.py
+    https://github.com/10XGenomics/cellranger/blob/master/lib/python/cellranger/reference.py
+    """
     input:
-        "ref/fa/txfa"
+        genome = determine_resource(config.get("fasta",None)),
+        gtf = determine_resource(config.get('gtf', None))
     output:
-        directory("ref/idx/salmon/transcripts_index")
-    params:
-        k = 31,
-        gencode = "--gencode" if GENCODE else ""
-    conda:
-        "envs/salmon.yaml"
-    singularity:
-        "docker://quay.io/biocontainers/salmon:0.14.2--ha0cc327_0"
+        "index/chrLength.txt",
+        "index/chrNameLength.txt",
+        "index/chrName.txt",
+        "index/chrStart.txt",
+        "index/exonGeTrInfo.tab",
+        "index/exonInfo.tab",
+        "index/Genome",
+        "index/geneInfo.tab",
+        "index/genomeParameters.txt",
+        "index/SA",
+        "index/SAindex",
+        "index/sjdbList.fromGTF.out.tab",
+        "index/sjdbInfo.txt",
+        "index/sjdbList.out.tab",
+        "index/transcriptInfo.tab",
     threads:
-        8
+        config.get("MAX_THREADS", 1)
+    conda:
+        "envs/star.yaml"
+    shadow:
+        "minimal"
+    #singularity:
+    #    "docker://quay.io/biocontainers/star:2.7.3a--0"
     shell:
-        "salmon index -t {input} -i {output} "
-        "-k {params.k} {params.gencode} -p {threads}"
-
-
-def get_proper_ended_salmon_call(x):
-    fqs = get_fqs_for_aln(x)
-    if len(fqs) == 1:
-        return "-r {r1}".format(r1=fqs[0].format(s=x))
-    else:
-        return "-1 {r1} -2 {r2}".format(r1=fqs[0].format(s=x), r2=fqs[1].format(s=x))
-
-
-
-rule salmon_quant:
-    input:
-        fq  = lambda wc: get_fqs_for_aln(wc.s),
-        idx = "ref/idx/salmon/transcripts_index",
-    output:
-        "salmon/{s}/quant.sf"
-    params:
-        bootstraps = "--numBootstraps {n}".format(n=SALMON_BOOTSTRAPS),
-        read_arg = lambda wc: get_proper_ended_salmon_call(wc.s)
-    threads:
-        8
-    conda:
-        "envs/salmon.yaml"
-    singularity:
-        "docker://quay.io/biocontainers/salmon:0.14.2--ha0cc327_0"
-    shell:
-        "salmon quant --libType A -i {input.idx} "
-        "{params.read_arg} "
-        "-p {threads} {params.bootstraps} "
-        "--seqBias --gcBias --posBias "
-        "--validateMappings -o salmon/{wildcards.s}"
-
-rule tx2gene_rds:
-    input:
-        gtf = rules.get_gtf.output
-    output:
-        "salmon/tx2gene.rds".format(p=PROJECT_NAME)
-    conda:
-        "envs/make_salmon_dds.yaml"
-    script:
-        "scripts/make_tx2gene.R"
-
-rule salmon_dds:
-    input:
-        qsf = expand("salmon/{s}/quant.sf",s=MY_SAMPLES),
-        gtf = rules.get_gtf.output,
-        tx2g = rules.tx2gene_rds.output
-    output:
-        "salmon/{p}_salmon_dds.rds".format(p=PROJECT_NAME)
-    params:
-        names = [x for x in MY_SAMPLES],
-        conds = {x:MY_SAMPLES[x]["condition"] for x in MY_SAMPLES},
-        ctrl = config.get("control_level",None)
-    conda:
-        "envs/make_salmon_dds.yaml"
-    script:
-        "scripts/make_salmon_dds.R"
+        "STAR --runMode genomeGenerate "
+        "--genomeDir index/ --runThreadN {threads} "
+        "--genomeFastaFiles {input.genome} "
+        "--sjdbGTFfile {input.gtf} "
+        "--genomeSAindexNbases 11"

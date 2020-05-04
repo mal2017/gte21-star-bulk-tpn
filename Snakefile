@@ -40,19 +40,10 @@ def determine_resource(path):
 PROJECT_NAME = config.get("project","rna")
 MY_SAMPLES = config.get("samples",None)
 
-GENCODE = config["txome"].get("gencode",False)
-SALMON_BOOTSTRAPS = config["salmon_config"].get("bootstraps",50)
-
-RUN_GALIGN = False
-RUN_SALMON = True
-
 target_files=[]
 
 # we pretty much always want these
-target_files.append("ref/fa/txfa")
-
-if RUN_SALMON:
-    target_files.append("salmon/{p}_salmon_dds.rds".format(p=PROJECT_NAME))
+target_files.append("index/chrLength.txt",)
 
 ruleorder: trim_se > trim_pe
 
