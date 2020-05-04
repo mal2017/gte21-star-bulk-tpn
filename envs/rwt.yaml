@@ -2,5 +2,6 @@ channels:
 - conda-forge
 - bioconda
 - defaults
+- mal2017
 dependencies:
-- salmon=0.14.2
+- rwt
