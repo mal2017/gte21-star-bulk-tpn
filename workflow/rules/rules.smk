@@ -144,7 +144,7 @@ rule star_align:
     #    "docker://quay.io/biocontainers/star:2.7.3a--0"
     shell:
         "STAR "
-        "--genomeDir results/index/ --runThreadN {threads} "
+        "--genomeDir results/index --runThreadN {threads} "
         "--readFilesIn {input.reads} "
         "--outSAMmultNmax 1 "
         "--outSAMtype BAM Unsorted "
