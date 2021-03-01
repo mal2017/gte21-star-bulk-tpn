@@ -143,6 +143,7 @@ rule star_align:
     #singularity:
     #    "docker://quay.io/biocontainers/star:2.7.3a--0"
     shell:
+        "mkdir -p {output} && "
         "STAR "
         "--genomeDir results/index --runThreadN {threads} "
         "--readFilesIn {input.reads} "
