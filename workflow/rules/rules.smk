@@ -151,4 +151,4 @@ rule star_align:
         "--quantMode GeneCounts "
         "--sjdbGTFfile {input.gtf} "
         "--readFilesCommand zcat "
-        "--outFileNamePrefix {output}"
+        "--outFileNamePrefix {output}/"
