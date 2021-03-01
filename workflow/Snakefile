@@ -52,9 +52,9 @@ target_files += expand("results/star/{s}/", s=MY_SAMPLES)
 
 subworkflow custom_genome:
     workdir:
-        "../gte21-custom-genome/"
+        "../../gte21-custom-genome/"
     snakefile:
-        "../gte21-custom-genome/workflow/Snakefile"
+        "../../gte21-custom-genome/workflow/Snakefile"
     configfile:
         MAIN_CONFIG
 
