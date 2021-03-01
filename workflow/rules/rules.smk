@@ -114,7 +114,7 @@ rule generate_star_idx:
     #    "docker://quay.io/biocontainers/star:2.7.3a--0"
     shell:
         "STAR --runMode genomeGenerate "
-        "--genomeDir index/ --runThreadN {threads} "
+        "--genomeDir results/index/ --runThreadN {threads} "
         "--genomeFastaFiles {input.genome} "
         "--sjdbGTFfile {input.gtf} "
         "--genomeSAindexNbases 11"
@@ -136,7 +136,7 @@ rule star_align:
     #    "docker://quay.io/biocontainers/star:2.7.3a--0"
     shell:
         "STAR "
-        "--genomeDir index/ --runThreadN {threads} "
+        "--genomeDir results/index/ --runThreadN {threads} "
         "--readFilesIn {input.reads} "
         "--outSAMmultNmax 1 "
         "--outSAMtype BAM Unsorted "
