@@ -46,7 +46,7 @@ rule trim_se:
         call_in = lambda wc: get_proper_ended_fastp_call(wc.s),
         call_out = lambda wc: get_proper_ended_fastp_out(wc.s)
     conda:
-        "envs/fastp.yaml"
+        "../envs/fastp.yaml"
     singularity:
         "docker://quay.io/biocontainers/fastp:0.20.0--hdbcaa40_0"
     shell:
@@ -69,7 +69,7 @@ rule trim_pe:
         call_in = lambda wc: get_proper_ended_fastp_call(wc.s),
         call_out = lambda wc: get_proper_ended_fastp_out(wc.s)
     conda:
-        "envs/fastp.yaml"
+        "../envs/fastp.yaml"
     singularity:
         "docker://quay.io/biocontainers/fastp:0.20.0--hdbcaa40_0"
     shell:
@@ -107,7 +107,7 @@ rule generate_star_idx:
     threads:
         config.get("MAX_THREADS", 1)
     conda:
-        "envs/star.yaml"
+        "../envs/star.yaml"
     shadow:
         "minimal"
     #singularity:
@@ -129,7 +129,7 @@ rule star_align:
     threads:
         config.get("MAX_THREADS", 1)
     conda:
-        "envs/star.yaml"
+        "../envs/star.yaml"
     #shadow:
     #    "minimal"
     #singularity:
