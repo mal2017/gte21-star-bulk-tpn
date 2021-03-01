@@ -23,6 +23,8 @@ def is_pe(name):
     fqs = MY_SAMPLES.get(name,None).get("fastq",None)
     return(len(fqs) == 2)
 
+configfile: "config/config.yaml"
+
 # DETERMINE REMOTE OR LOCAL RESOURCE
 def determine_resource(path):
     if "gs://" in path:
@@ -40,13 +42,21 @@ def determine_resource(path):
 
 MY_SAMPLES = config.get("samples",None)
 
+MAIN_CONFIG = config.get("MAIN_CONFIG",'config/config.yaml')
 
 target_files=[]
 
 # we pretty much always want these
 #target_files.append("")
-target_files += expand("star/{s}/", s=MY_SAMPLES)
+target_files += expand("results/star/{s}/", s=MY_SAMPLES)
 
+subworkflow custom_genome:
+    workdir:
+        "../gte21-custom-genome/"
+    snakefile:
+        "../gte21-custom-genome/workflow/Snakefile"
+    configfile:
+        MAIN_CONFIG
 
 ruleorder: trim_se > trim_pe
 
@@ -54,4 +64,4 @@ rule target:
     input:
         target_files
 
-include: "rules.smk"
+include: "rules/rules.smk"

@@ -1,11 +1,12 @@
 # https://www.biorxiv.org/content/10.1101/2020.03.23.000356v1.full
 # https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE115478
-
+MAIN_CONFIG: /scratch/mal456/TE-proj-reorg/TestisTEs2021/config/config.yaml #/media/mlawlor/work/TestisTEs2021/config/config.yaml
+# alignment options
+GENOME_FASTA: /projects/genetics/ellison_lab/genomes/dna/masked/dmel-all-chromosome-r6.22.fasta.masked #/media/mlawlor/work/data/genome/dmel-all-chromosome-r6.22.fasta.masked
+TRANSPOSON_FASTA: /projects/genetics/ellison_lab/genomes/dna/masked/dmel_repbase_lib.fasta #/media/mlawlor/work/data/genome/dmel_repbase_lib.fasta
+GENE_GTF: ftp://ftp.flybase.net/releases/FB2018_03/dmel_r6.22/gtf/dmel-all-r6.22.gtf.gz
 
 MAX_THREADS: 8
-
-fasta: /scratch/mal456/20200105_elr/genome/fasta/genome.fa
-gtf: /scratch/mal456/20200105_elr/genome/genes/genes.gtf
 
 samples:
   larval_testes_cleaned_papain_01: # your own assigned name for this sample

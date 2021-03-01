@@ -2,21 +2,21 @@ rule concat_fqs:
     input:
         lambda wc: [determine_resource(x) for x in config["samples"][wc.s]["fastq"][wc.end]]
     output:
-        temp("fastq/{s}_{end}.fq.gz")
+        temp("results/fastq/{s}_{end}.fq.gz")
     shell:
         "cat {input} > {output}"
 
 def get_fqs_for_trim(x):
     if (len(config["samples"][x]["fastq"].keys()) == 1):
-        return ["fastq/{s}_r1.fq.gz"]
+        return ["results/fastq/{s}_r1.fq.gz"]
     else:
-        return ["fastq/{s}_r1.fq.gz", "fastq/{s}_r2.fq.gz"]
+        return ["results/fastq/{s}_r1.fq.gz", "results/fastq/{s}_r2.fq.gz"]
 
 def get_fqs_for_aln(x):
     if (len(config["samples"][x]["fastq"].keys()) == 1):
-        return ["fastq/{s}_r1.trimmed.fq.gz"]
+        return ["results/fastq/{s}_r1.trimmed.fq.gz"]
     else:
-        return ["fastq/{s}_r1.trimmed.fq.gz", "fastq/{s}_r2.trimmed.fq.gz"]
+        return ["results/fastq/{s}_r1.trimmed.fq.gz", "results/fastq/{s}_r2.trimmed.fq.gz"]
 
 
 def get_proper_ended_fastp_call(x):
@@ -37,9 +37,9 @@ rule trim_se:
     input:
         fq = lambda wc: get_fqs_for_trim(wc.s)
     output:
-        r1 = "fastq/{s}_r1.trimmed.fq.gz",
-        html = "fastq/{s}_fastp.html",
-        json = "fastq/{s}_fastp.json"
+        r1 = "results/fastq/{s}_r1.trimmed.fq.gz",
+        html = "results/fastq/{s}_fastp.html",
+        json = "results/fastq/{s}_fastp.json"
     threads:
         2
     params:
@@ -59,10 +59,10 @@ rule trim_pe:
     input:
         fq = lambda wc: get_fqs_for_trim(wc.s)
     output:
-        r1 = "fastq/{s}_r1.trimmed.fq.gz",
-        r2 = "fastq/{s}_r2.trimmed.fq.gz",
-        html = "fastq/{s}_fastp.html",
-        json = "fastq/{s}_fastp.json"
+        r1 = "results/fastq/{s}_r1.trimmed.fq.gz",
+        r2 = "results/fastq/{s}_r2.trimmed.fq.gz",
+        html = "results/fastq/{s}_fastp.html",
+        json = "results/fastq/{s}_fastp.json"
     threads:
         2
     params:
@@ -78,13 +78,6 @@ rule trim_pe:
         "-j {output.json} -h {output.html} "
         "-w {threads} -L -R {wildcards.s}_fastp"
 
-rule get_gtf:
-    output:
-        "ref/tx.gtf"
-    params:
-        fl=config.get("gtf",None)
-    shell:
-        "curl -J -L {params.fl} > {output[0]}"
 
 rule generate_star_idx:
     """
@@ -93,24 +86,24 @@ rule generate_star_idx:
     https://github.com/10XGenomics/cellranger/blob/master/lib/python/cellranger/reference.py
     """
     input:
-        genome = determine_resource(config.get("fasta",None)),
-        gtf = determine_resource(config.get('gtf', None))
+        genome = custom_genome('results/custom-genome/combined.fasta'),
+        gtf = custom_genome('results/custom-genome/combined.fixed.gtf')
     output:
-        "index/chrLength.txt",
-        "index/chrNameLength.txt",
-        "index/chrName.txt",
-        "index/chrStart.txt",
-        "index/exonGeTrInfo.tab",
-        "index/exonInfo.tab",
-        "index/Genome",
-        "index/geneInfo.tab",
-        "index/genomeParameters.txt",
-        "index/SA",
-        "index/SAindex",
-        "index/sjdbList.fromGTF.out.tab",
-        "index/sjdbInfo.txt",
-        "index/sjdbList.out.tab",
-        "index/transcriptInfo.tab",
+        "results/index/chrLength.txt",
+        "results/index/chrNameLength.txt",
+        "results/index/chrName.txt",
+        "results/index/chrStart.txt",
+        "results/index/exonGeTrInfo.tab",
+        "results/index/exonInfo.tab",
+        "results/index/Genome",
+        "results/index/geneInfo.tab",
+        "results/index/genomeParameters.txt",
+        "results/index/SA",
+        "results/index/SAindex",
+        "results/index/sjdbList.fromGTF.out.tab",
+        "results/index/sjdbInfo.txt",
+        "results/index/sjdbList.out.tab",
+        "results/index/transcriptInfo.tab",
     threads:
         config.get("MAX_THREADS", 1)
     conda:
@@ -130,9 +123,9 @@ rule star_align:
     input:
         rules.generate_star_idx.output,
         reads = lambda wc: get_fqs_for_aln(wc.s),
-        gtf = determine_resource(config.get('gtf', None)),
+        gtf = custom_genome('results/custom-genome/combined.fixed.gtf')
     output:
-        directory("star/{s}/")
+        directory("results/star/{s}/")
     threads:
         config.get("MAX_THREADS", 1)
     conda:
