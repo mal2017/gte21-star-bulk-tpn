@@ -105,11 +105,15 @@ rule generate_star_idx:
         "results/index/sjdbList.out.tab",
         "results/index/transcriptInfo.tab",
     threads:
-        config.get("MAX_THREADS", 1)
+        12
     conda:
         "../envs/star.yaml"
     shadow:
         "minimal"
+    resources:
+        time=60,
+        mem=20000,
+        cpus=12
     #singularity:
     #    "docker://quay.io/biocontainers/star:2.7.3a--0"
     shell:
@@ -127,9 +131,13 @@ rule star_align:
     output:
         directory("results/star/{s}/")
     threads:
-        config.get("MAX_THREADS", 1)
+        12
     conda:
         "../envs/star.yaml"
+    resources:
+        time=240,
+        mem=20000,
+        cpus=12
     #shadow:
     #    "minimal"
     #singularity:
