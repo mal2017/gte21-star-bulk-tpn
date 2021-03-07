@@ -4,3 +4,5 @@ test.yaml
 *html
 multiqc_data
 work/
+results/
+ftp*/
